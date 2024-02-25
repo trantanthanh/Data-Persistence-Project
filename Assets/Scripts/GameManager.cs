@@ -2,29 +2,40 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+
+    [HideInInspector]
     public string playerName = "";
+    [HideInInspector]
     public string bestScoreName = "";
+    [HideInInspector]
     public int bestScore = 0;
+
+    public Text BestScoreText;
 
     private string saveFileName = "savefile.json";
     private string pathSave;
+
+    [SerializeField] TMP_InputField nameInput;
     void Awake()
     {
         pathSave = $"{Application.persistentDataPath}/{saveFileName}";
         if (Instance != null)
         {
             Destroy(gameObject);
-            return;        
+            return;
         }
 
         Instance = this;
@@ -34,7 +45,7 @@ public class GameManager : MonoBehaviour
 
     [Serializable]
     class SaveData
-    { 
+    {
         public string bestScoreName = "";
         public int bestScore;
         public string playerName = "";
@@ -62,23 +73,53 @@ public class GameManager : MonoBehaviour
             bestScoreName = data.bestScoreName;
             bestScore = data.bestScore;
         }
+
+        if (playerName != "")
+        {
+            SetPlayerName();
+        }
+
+        if (bestScoreName != "")
+        {
+            SetHighScoreName();
+        }
+    }
+
+    private void SetHighScoreName()
+    {
+        BestScoreText.text = $"Best Score : {bestScoreName} : {bestScore}";
+    }
+
+    void ReadInputName()
+    {
+        playerName = nameInput.text;
+    }
+
+    void SetPlayerName()
+    {
+        nameInput.text = playerName;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void StartGame()
     {
-        SceneManager.LoadScene("GamePlay");
+        ReadInputName();
+        if (playerName != "")
+        {
+            SaveScore();
+            SceneManager.LoadScene("GamePlay");
+        }
     }
 
     public void ExitGame()
