@@ -932,7 +932,7 @@ MonoBehaviour:
   playerName: 
   bestScoreName: 
   bestScore: 0
-  BestScoreText: {fileID: 0}
+  BestScoreText: {fileID: 2078529056}
   nameInput: {fileID: 1835347890}
 --- !u!1 &1246364278
 GameObject:
